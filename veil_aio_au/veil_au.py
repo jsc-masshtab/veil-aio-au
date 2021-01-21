@@ -51,7 +51,7 @@ class CommandType:
         return instance.__dict__[self.name]
 
 
-class ReturnDict:
+class VeilResult:
     """VeilAuthPam operation result.
 
     Attributes:
@@ -150,7 +150,7 @@ class VeilAuthPam:
         cmd_args_str = ' '.join(cmd_args)
         return shlex.split(cmd_args_str)
 
-    async def __run_cmd(self, cmd: str, cmd_args: List[str]) -> ReturnDict:
+    async def __run_cmd(self, cmd: str, cmd_args: List[str]) -> VeilResult:
         """Create asyncio.subprocess with __task_timeout.
 
         cmd: should be a str value of VeilAuthPam.__*_CMD attribute.
@@ -185,18 +185,18 @@ class VeilAuthPam:
             when using pipes to avoid this condition.
             """
             await asyncio.wait_for(proc.wait(), 10)
-        # prepare ReturnDict
+        # prepare VeilResult
         error_msg = stderr.decode() if stderr else None
         stdout_msg = stdout.decode() if stdout else None
         return_code = 1 if return_code == 0 and stderr else return_code
-        return ReturnDict(return_code=return_code, error_msg=error_msg, stdout_msg=stdout_msg)
+        return VeilResult(return_code=return_code, error_msg=error_msg, stdout_msg=stdout_msg)
 
     async def _user_edit(self, username: str, group_add: Optional[str] = None,
                          lock: Optional[bool] = False, unlock: Optional[bool] = False,
                          gecos: Optional[str] = None,
                          expire_date: Optional[str] = None,
                          inactive_period: Optional[int] = None,
-                         ) -> ReturnDict:
+                         ) -> VeilResult:
         """Modify user attributes.
 
         Arguments:
@@ -227,7 +227,7 @@ class VeilAuthPam:
         # Execute command
         return await self.__run_cmd(cmd=self.__USER_EDIT_CMD, cmd_args=cmd_args)
 
-    async def user_create(self, username: str, group: Optional[str] = None, gecos: Optional[str] = None) -> ReturnDict:
+    async def user_create(self, username: str, group: Optional[str] = None, gecos: Optional[str] = None) -> VeilResult:
         """Run self.__ADD_USER_CMD with given username, password and gecos.
 
         Arguments:
@@ -242,7 +242,7 @@ class VeilAuthPam:
             cmd_args.append('-G', gecos)
         return await self.__run_cmd(cmd=self.__USER_ADD_CMD, cmd_args=cmd_args)
 
-    async def user_set_password(self, username: str, new_password: str) -> ReturnDict:
+    async def user_set_password(self, username: str, new_password: str) -> VeilResult:
         """Set to a user with username new password.
 
         Arguments:
@@ -253,7 +253,7 @@ class VeilAuthPam:
         return await self.__run_cmd(cmd=self.__USER_SET_PASS_CMD, cmd_args=cmd_args)
 
     async def user_create_new(self, username: str, password: str, group: Optional[str] = None,
-                              gecos: Optional[str] = None) -> ReturnDict:
+                              gecos: Optional[str] = None) -> VeilResult:
         """Interface for creating new user.
 
         Create new user -> Set password to a new user.
@@ -270,25 +270,25 @@ class VeilAuthPam:
         password_result = await self.user_set_password(username=username, new_password=password)
         if not password_result.success:
             return password_result
-        return ReturnDict(return_code=0, error_msg=None, stdout_msg=None)
+        return VeilResult(return_code=0, error_msg=None, stdout_msg=None)
 
-    async def user_set_gecos(self, username: str, gecos: str) -> ReturnDict:
+    async def user_set_gecos(self, username: str, gecos: str) -> VeilResult:
         """Set new GECOS value for a user with username."""
         return await self._user_edit(username=username, gecos=gecos)
 
-    async def user_add_group(self, username: str, group: str) -> ReturnDict:
+    async def user_add_group(self, username: str, group: str) -> VeilResult:
         """Add to a user additional group."""
         return await self._user_edit(username=username, group=group)
 
-    async def user_lock(self, username: str) -> ReturnDict:
+    async def user_lock(self, username: str) -> VeilResult:
         """Lock a user with the given username."""
         return await self._user_edit(username=username, lock=True)
 
-    async def user_unlock(self, username: str) -> ReturnDict:
+    async def user_unlock(self, username: str) -> VeilResult:
         """Unlock a user with the given username."""
         return await self._user_edit(username=username, unlock=True)
 
-    async def user_remove_group(self, username: str, group: str) -> ReturnDict:
+    async def user_remove_group(self, username: str, group: str) -> VeilResult:
         """Remove existing user from a group members."""
         cmd_args = ['-u', username, '-g', group]
         return await self.__run_cmd(cmd=self.__USER_REMOVE_GROUP_CMD, cmd_args=cmd_args)
@@ -301,12 +301,12 @@ class VeilAuthPam:
             return True
         return False
 
-    async def group_create(self, group: str) -> ReturnDict:
+    async def group_create(self, group: str) -> VeilResult:
         """Create new group."""
         cmd_args = ['-g', group]
         return await self.__run_cmd(cmd=self.__GROUP_ADD_CMD, cmd_args=cmd_args)
 
-    async def user_authenticate(self, username: str, password: str) -> ReturnDict:
+    async def user_authenticate(self, username: str, password: str) -> VeilResult:
         """Run system authentication method via libpam."""
         if pam is None:
             raise RuntimeError('Please install `python-pam`')  # pragma: no cover
@@ -317,8 +317,8 @@ class VeilAuthPam:
             result = await asyncio.wait_for(aio_task, timeout=self.__task_timeout)
         except asyncio.TimeoutError:
             result = False
-        # prepare ReturnDict
+        # prepare VeilResult
         stdout_msg = __PAM.reason if result else None
         error_msg = __PAM.reason if not result else None
         return_code = __PAM.code
-        return ReturnDict(return_code=return_code, error_msg=error_msg, stdout_msg=stdout_msg)
+        return VeilResult(return_code=return_code, error_msg=error_msg, stdout_msg=stdout_msg)
