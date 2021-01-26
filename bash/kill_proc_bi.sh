@@ -1,27 +1,21 @@
 #!/bin/bash
 # bi == Broker Interface
-# Script should be at /usr/sbin, like /usr/sbin/set_pass_bi.sh and added to sudoers.
-# Example of usage: set_pass_bi.sh -u tmp_user -p new_pass
+# Script should be at /usr/sbin, like /usr/sbin/kill_proc_bi.sh and added to sudoers.
+# Example of usage: kill_proc_bi.sh -p 123
 
 read_arguments(){
   # read user passed arguments
-  USAGE="$(basename "$0") -u user1, --username user1  -p new_pass, --password new_pass [-h, --help]"
+  USAGE="$(basename "$0") -p 123, --pid 123 [-h, --help]"
 
   UNKNOWN=()
-  USERNAME=""
-  PASSWORD=""
+  PROC_PID=""
 
   while [[ $# -gt 0 ]]
   do
     KEY="$1"
     case ${KEY} in
-        -u|--username)
-        USERNAME="$2"
-        shift # past argument
-        shift # past value
-        ;;
-        -p|--password)
-        PASSWORD="$2"
+        -p|--pid)
+        PROC_PID="$2"
         shift # past argument
         shift # past value
         ;;
@@ -42,26 +36,30 @@ read_arguments(){
     exit 1
   fi
 
-  if [ -z "${USERNAME}" ]; then
-    echo "Username can't be empty." >&2
+  if [ -z "${PROC_PID}" ]; then
+    echo "${USAGE}"
+    print_arguments
+    echo "Proc PID can't be empty."  >&2
     exit 1
   fi
 
-  if [ -z "${PASSWORD}" ]; then
-    echo "Password can't be empty." >&2
-    exit 1
-  fi
+}
 
+print_arguments(){
+  echo "Proc PID argument is: <<${PROC_PID}>>"
 }
 
 build_command(){
   SUDO_PATH="/usr/bin/sudo"
-  COMMAND="/usr/sbin/chpasswd"
-  FULL_COMMAND="echo ${USERNAME}:${PASSWORD} | ${SUDO_PATH} ${COMMAND}"
+  COMMAND="/usr/bin/kill"
+
+  FULL_COMMAND="${SUDO_PATH} ${COMMAND} ${PROC_PID}"
+  echo "Full command: <<${FULL_COMMAND}>>"
+
 }
 
 execute_command(){
-  eval "${FULL_COMMAND}"
+  ${FULL_COMMAND}
   exit 0
 }
 

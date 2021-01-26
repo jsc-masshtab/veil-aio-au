@@ -7,7 +7,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='veil-aio-au',
-    version='0.1.0',
+    version='0.1.1',
     author='Aleksey Devyatkin',
     author_email='a.devyatkin@mashtab.org',
     description='VeiL asyncio linux authentication utils.',

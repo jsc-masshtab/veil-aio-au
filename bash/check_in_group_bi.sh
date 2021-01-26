@@ -1,6 +1,6 @@
 #!/bin/bash
 # bi == Broker Interface
-# Script should be at /usr/sbin, like /usr/sbin/check_in_group_bi.sh and added to sudouers.
+# Script should be at /usr/sbin, like /usr/sbin/check_in_group_bi.sh and added to sudoers.
 # Example of usage: check_in_group_bi.sh -u -g vdi-broker-users
 
 read_arguments(){
@@ -63,10 +63,7 @@ build_command(){
   SUDO_PATH="/usr/bin/sudo"
   ID_COMMAND="/usr/bin/id -Gn ${USERNAME}"
   GREP_COMMAND="grep -c ${GROUPNAME}"
-
   FULL_COMMAND="${SUDO_PATH} ${ID_COMMAND} | ${GREP_COMMAND}"
-  echo "Full command: <<${FULL_COMMAND}>>"
-
 }
 
 execute_command(){

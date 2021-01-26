@@ -5,12 +5,12 @@
 for additional info see README.md
 """
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
-from .veil_au import VeilAuthPam
+from .veil_au import VeilAuthPam, VeilResult
 
 __all__ = (
-    'VeilAuthPam',
+    'VeilAuthPam', 'VeilResult'
 )
 
 __author__ = 'Aleksey Devyatkin <a.devyatkin@mashtab.org>'
