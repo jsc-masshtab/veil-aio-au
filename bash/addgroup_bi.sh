@@ -1,6 +1,6 @@
 #!/bin/bash
 # bi == Broker Interface
-# Script should be at /usr/sbin, like /usr/sbin/adduser_bi.sh and added to sudouers.
+# Script should be at /usr/sbin, like /usr/sbin/adduser_bi.sh and added to sudoers.
 # Example of usage: addgroup_bi.sh -g group1
 
 read_arguments(){

@@ -1,6 +1,7 @@
-vdiadmin     ALL = NOPASSWD : /usr/sbin/vdi_adduser_bi.sh
-vdiadmin     ALL = NOPASSWD : /usr/sbin/vdi_addgroup_bi.sh
-vdiadmin     ALL = NOPASSWD : /usr/sbin/vdi_check_in_group_bi.sh
-vdiadmin     ALL = NOPASSWD : /usr/sbin/vdi_edituser_bi.sh
-vdiadmin     ALL = NOPASSWD : /usr/sbin/vdi_set_pass_bi.sh
-vdiadmin     ALL = NOPASSWD : /usr/sbin/vdi_remove_user_group_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_adduser_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_addgroup_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_check_in_group_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_edituser_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_set_pass_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_remove_user_group_bi.sh
+vdiadmin    ALL = NOPASSWD : /usr/sbin/vdi_kill_proc_bi.sh

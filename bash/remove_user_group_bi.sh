@@ -1,6 +1,6 @@
 #!/bin/bash
 # bi == Broker Interface
-# Script should be at /usr/sbin, like /usr/sbin/remove_user_group_bi.sh and added to sudouers.
+# Script should be at /usr/sbin, like /usr/sbin/remove_user_group_bi.sh and added to sudoers.
 # Example of usage: remove_user_group_bi.sh -u -g vdi-broker-users
 
 read_arguments(){

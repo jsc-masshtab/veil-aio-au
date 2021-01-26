@@ -1,6 +1,6 @@
 #!/bin/bash
 # bi == Broker Interface
-# Script should be at /usr/sbin, like /usr/sbin/edituser_bi.sh and added to sudouers.
+# Script should be at /usr/sbin, like /usr/sbin/edituser_bi.sh and added to sudoers.
 # Example of usage: edituser_bi.sh -u tmp_user -L
 
 read_arguments(){
