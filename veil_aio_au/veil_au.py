@@ -236,7 +236,7 @@ class VeilAuthPam:
             stderr = None
             stdout = None
             if as_sudo:
-                kill_cmd_args = [self.__KILL_CMD, proc.pid]
+                kill_cmd_args = [self.__KILL_CMD, str(proc.pid)]
                 kill_proc = await asyncio.create_subprocess_exec(cmd, *kill_cmd_args,
                                                                  stdout=asyncio.subprocess.DEVNULL,  # noqa: E501
                                                                  stderr=asyncio.subprocess.DEVNULL,  # noqa: E501

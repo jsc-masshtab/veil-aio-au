@@ -5,7 +5,7 @@
 for additional info see README.md
 """
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 from .veil_au import VeilAuthPam, VeilResult
 
