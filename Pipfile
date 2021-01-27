@@ -6,7 +6,6 @@ name = "pypi"
 [dev-packages]
 flake8 = "*"
 flake8-builtins = "*"
-flake8-bugbear = "*"
 flake8-import-order= "*"
 flake8-docstrings = "*"
 flake8-quotes = "*"
