@@ -354,6 +354,8 @@ class VeilAuthPam:
             gecos: GECOS str (https://en.wikipedia.org/wiki/Gecos_field)
             show_stdout: redefine the class show_stdout argument.
             as_sudo: redefine the class as_sudo argument.
+
+        If return code 969 - user is created, but password set return error.
         """
         user_result = await self.user_create(username=username,
                                              group=group,
@@ -367,7 +369,10 @@ class VeilAuthPam:
                                                        show_stdout=show_stdout,
                                                        as_sudo=as_sudo)
         if not password_result.success:
-            return password_result
+            # pseudo-unique return code
+            return VeilResult(return_code=969,
+                              error_msg=password_result.error_msg,
+                              stdout_msg=None)
         return VeilResult(return_code=0, error_msg=None, stdout_msg=None)
 
     async def user_set_gecos(self, username: str, gecos: str,
