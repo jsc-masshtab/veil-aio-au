@@ -13,6 +13,20 @@ linter:
   only:
     - merge_requests
 
+security_check:
+  image: python:3.5.9-alpine
+  stage: linter
+  before_script:
+    - apk add build-base
+    - python -m pip install --upgrade pip
+    - python -m pip install pipenv safety
+    - pipenv install
+    - pipenv lock --requirements > requirements.txt
+  script:
+    - safety check -r requirements.txt
+  only:
+    - merge_requests
+
 tests:
   image: python:3.5.9-alpine
   stage: tests
@@ -21,10 +35,8 @@ tests:
     - python -m pip install --upgrade pip
     - python -m pip install pipenv
     - pipenv install --dev
-    - pipenv lock --dev --requirements > dev_requirements.txt
-    - python -m pip install -r dev_requirements.txt
   script:
-    - pytest
+    - pipenv run pytest
   only:
     - merge_requests
 
