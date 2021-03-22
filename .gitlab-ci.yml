@@ -55,7 +55,7 @@ build:
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
-    - python -m pip install pipenv twine setuptools wheel
+    - python -m pip install pipenv setuptools wheel
     - pipenv install --dev
     - pipenv lock --dev --requirements > dev_requirements.txt
     - python -m pip install -r dev_requirements.txt
@@ -72,12 +72,12 @@ publish:
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
-    - python -m pip install pipenv
+    - python -m pip install pipenv twine setuptools wheel
     - pipenv install --dev
     - pipenv lock --dev --requirements > dev_requirements.txt
     - python -m pip install -r dev_requirements.txt
-    - python setup.py sdist bdist_wheel
   script:
-    - TWINE_PASSWORD=${PYPI_PASSWORD} TWINE_USERNAME=${PYPI_USERNAME} python -m twine upload --repository veil-aio-au
+    - python setup.py sdist bdist_wheel
+    - python -m twine upload dist/* --verbose
   only:
-    - tags:/^release-.*$/
+    - /^release-.*$/i
