@@ -55,10 +55,7 @@ build:
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
-    - python -m pip install pipenv setuptools wheel
-    - pipenv install --dev
-    - pipenv lock --dev --requirements > dev_requirements.txt
-    - python -m pip install -r dev_requirements.txt
+    - python -m pip install twine setuptools wheel
   script:
     - python setup.py sdist bdist_wheel
   only:
@@ -72,10 +69,7 @@ publish:
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
-    - python -m pip install pipenv twine setuptools wheel
-    - pipenv install --dev
-    - pipenv lock --dev --requirements > dev_requirements.txt
-    - python -m pip install -r dev_requirements.txt
+    - python -m pip install twine setuptools wheel
   script:
     - python setup.py sdist bdist_wheel
     - python -m twine upload dist/*
