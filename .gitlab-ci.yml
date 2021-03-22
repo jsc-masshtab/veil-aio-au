@@ -2,10 +2,13 @@ stages:
   - linter
   - tests
   - build
+  - publish
 
 linter:
   image: python:3.5.9-alpine
   stage: linter
+  tags:
+    - docker
   before_script:
     - python -m pip install --upgrade pip && python -m pip install flake8 flake8-builtins flake8-bugbear flake8-import-order flake8-docstrings flake8-quotes
   script:
@@ -16,6 +19,8 @@ linter:
 security_check:
   image: python:3.5.9-alpine
   stage: linter
+  tags:
+    - docker
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
@@ -30,6 +35,8 @@ security_check:
 tests:
   image: python:3.5.9-alpine
   stage: tests
+  tags:
+    - docker
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
@@ -43,10 +50,12 @@ tests:
 build:
   image: python:3.5.9-alpine
   stage: build
+  tags:
+    - docker
   before_script:
     - apk add build-base
     - python -m pip install --upgrade pip
-    - python -m pip install pipenv
+    - python -m pip install pipenv twine setuptools wheel
     - pipenv install --dev
     - pipenv lock --dev --requirements > dev_requirements.txt
     - python -m pip install -r dev_requirements.txt
@@ -54,3 +63,21 @@ build:
     - python setup.py sdist bdist_wheel
   only:
     - merge_requests
+
+publish:
+  image: python:3.5.9-alpine
+  stage: publish
+  tags:
+    - docker
+  before_script:
+    - apk add build-base
+    - python -m pip install --upgrade pip
+    - python -m pip install pipenv
+    - pipenv install --dev
+    - pipenv lock --dev --requirements > dev_requirements.txt
+    - python -m pip install -r dev_requirements.txt
+    - python setup.py sdist bdist_wheel
+  script:
+    - TWINE_PASSWORD=${PYPI_PASSWORD} TWINE_USERNAME=${PYPI_USERNAME} python -m twine upload --repository veil-aio-au
+  only:
+    - tags:/^release-.*$/

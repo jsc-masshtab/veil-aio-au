@@ -7,13 +7,13 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='veil-aio-au',
-    version='0.1.3',
+    version='0.1.4',
     author='Aleksey Devyatkin',
     author_email='a.devyatkin@mashtab.org',
     description='VeiL asyncio linux authentication utils.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='http://gitlab.bazalt.team/vdi/veil-aio-au',
+    url='https://github.com/jsc-masshtab/veil-aio-au',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',
